@@ -1,10 +1,11 @@
 import { useState, useContext } from 'react';
 import { FormControl, Select, MenuItem, Button, Grid, Paper, Input, InputLabel, FormHelperText, Typography } from '@mui/material';
 import { MinterContext } from 'components';
-import constants from 'react-dappify/constants';
+import {constants, utils} from 'react-dappify';
+const { setPreference } = utils.localStorage;
 
-const Chains = ({t}) => {
-
+const Chains = ({t, defaultChainId }) => {
+    console.log(defaultChainId);
     const {minter, setMinter} = useContext(MinterContext);
 
     const renderChains = () => {
@@ -37,11 +38,13 @@ const Chains = ({t}) => {
                 id="demo-simple-select"
                 value={minter.chainId}
                 label="Select the Network"
+                disabled={defaultChainId}
                 fullWidth
                 onChange={(e) => {
                     const newMinter = {...minter};
                     newMinter.chainId = e.target.value;
                     setMinter(newMinter);
+                    setPreference(constants.PREFERENCES.CHAIN, { chainId: newMinter.chainId });
                 }}
             >
                 {renderChains()}

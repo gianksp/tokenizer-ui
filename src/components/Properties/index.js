@@ -1,15 +1,28 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { MenuItem, Select, FormControl, Grid, Alert, Input, InputLabel, FormHelperText, TextField, Paper, Button } from '@mui/material';
 import Chains from 'components/Chains';
 import { MinterContext } from 'components';
+import {constants} from 'react-dappify';
+import CollectionDialog from 'components/CollectionDialog';
 
-const Properties = ({t}) => {
+const Properties = ({t, defaultChainId, handleAuth }) => {
     const {minter, setMinter} = useContext(MinterContext);
+    const [createCollectionDialog, setCreateCollectionDialog] = useState();
+
+
+    const handleChange = (files) => {
+        const targetFile = files[0];
+        const newMinter = {...minter};
+        newMinter.collectionMetadata.image = targetFile;
+        setMinter(newMinter);
+    }
+
+
     return (
         
         <Grid container sx={{ width: '100%' }} spacing={2}>
             <Grid item xs={12}>
-                <Chains />
+                <Chains defaultChainId={defaultChainId} />
             </Grid>
             <Grid item xs={12}>
                 <TextField  label="Title" 
@@ -37,12 +50,45 @@ const Properties = ({t}) => {
             </Grid>
             <Grid item xs={6}>
                 <Grid container>
-                    <Grid item xs={6}><Button disableElevation variant={ minter.type === 'ERC721' ? 'contained' : 'outlined' } fullWidth>ERC721</Button></Grid>
-                    <Grid item xs={6}><Button disableElevation disabled variant={ minter.type === 'ERC1155' ? 'contained' : 'outlined' } fullWidth>ERC1155</Button></Grid>
+                    <Grid item xs={6}>
+                        <Button disableElevation 
+                                variant={ minter.type === 'ERC721' ? 'contained' : 'outlined' } 
+                                fullWidth
+                                onClick={() => {
+                                    const newMinter = {...minter};
+                                    newMinter.type = 'ERC721';
+                                    newMinter.amount = 1;
+                                    setMinter(newMinter);
+                                }}>
+                            ERC721
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Button disableElevation 
+                                variant={ minter.type === 'ERC1155' ? 'contained' : 'outlined' } 
+                                fullWidth
+                                onClick={() => {
+                                    const newMinter = {...minter};
+                                    newMinter.type = 'ERC1155';
+                                    setMinter(newMinter);
+                                }}>
+                            ERC1155
+                        </Button>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={6}>
-                <TextField disabled={minter.type === 'ERC721'} label="Quantity" type="number" fullWidth />
+                <TextField  disabled={minter.type === 'ERC721'} 
+                            label="Quantity" 
+                            type="number" 
+                            fullWidth 
+                            value={minter.amount}
+                            onChange={(e) => {
+                                const newMinter = {...minter};
+                                newMinter.amount = e.target.value;
+                                setMinter(newMinter);
+                            }}
+                />
             </Grid>
             <Grid item xs={12}>
                 <TextField  label="Social Media URL (optional)" 
@@ -55,6 +101,26 @@ const Properties = ({t}) => {
                             }}
                 />
             </Grid>
+            {/*<Grid item xs={6}>
+                <Button disableElevation variant={ minter.collection === constants.CONTRACTS.tokenizer[minter.chainId] ? 'contained' : 'outlined' } fullWidth onClick={() => {
+                    const newMinter = {...minter};
+                    newMinter.collection = constants.CONTRACTS.tokenizer[minter.chainId];
+                    setMinter(newMinter);
+                }}>
+                    Dappify Collection
+                </Button>
+            </Grid>
+            <Grid item xs={6}>
+                <Button disableElevation variant={ minter.collection && minter.collection !== constants.CONTRACTS.tokenizer[minter.chainId] ? 'contained' : 'outlined' } fullWidth onClick={() => {
+                    setCreateCollectionDialog(true);
+                }}>
+                    Create New Collection
+                </Button>
+            </Grid>
+            <CollectionDialog open={createCollectionDialog} onClose={() => {
+                console.log('closing');
+                setCreateCollectionDialog(false);
+            }} handleChange={handleChange} handleAuth={handleAuth} /> */}
         </Grid>
 
     );
