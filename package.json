@@ -66,7 +66,7 @@
     "react-compound-timer": "^1.2.0",
     "react-copy-to-clipboard": "^5.0.3",
     "react-currency-format": "^1.0.0",
-    "react-dappify": "^0.0.25",
+    "react-dappify": "^0.0.31",
     "react-device-detect": "^1.17.0",
     "react-dom": "^18.1.0",
     "react-draft-wysiwyg": "^1.14.6",

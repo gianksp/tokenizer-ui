@@ -1,9 +1,12 @@
 {
-    "id": "tokenizer",
-    "name": "NFT Creator",
-    "description": "Tokenize anything into an NFT",
-    "source": "https://github.com/DappifyWeb3/tokenizer-ui",
-    "guide": "https://github.com/DappifyWeb3/tokenizer-ui",
+  "id": "tokenizer",
+  "name": "NFT Creator",
+  "description": "From music to real estate, create nft and tokenize anything!",
+  "source": "https://github.com/DappifyWeb3/marketplace-ui",
+  "guide": "https://github.com/DappifyWeb3/marketplace-ui",
+  "image": "https://www.domusweb.it/content/dam/domusweb/en/news/2021/05/13/how-to-mint-your-own-nft-in-5-simple-steps/nft.jpg.foto.rbig.jpg",
+  "version": "0.0.1",
+  "category": "nft",
     "contract": {
         "0x61": null,
         "0xa869": null,

@@ -62,7 +62,7 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
                 const imageFileUrl = imageFile.ipfs();
                 minter.collectionMetadata.image = imageFileUrl;
             }
-
+                        
             // const currentProvider = new ethers.providers.Web3Provider(window.ethereum);
             const contract = minter.type === 'ERC271' ? 
                 Bytecode.output.contracts['contracts/ERC721DappifyV1.sol'].ERC721DappifyV1 :
@@ -74,7 +74,9 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
             const abi = contract.abi;
             const bytecode = contract.evm.bytecode;
             const market = new ethers.ContractFactory(abi, bytecode, web3Provider.getSigner());
-            const marketplace = await market.deploy();
+            const marketplace = minter.type === 'ERC271' ? 
+                await market.deploy(minter.collectionMetadata.name, minter.collectionMetadata.symbol) : 
+                await market.deploy(minter.collectionMetadata.name, minter.collectionMetadata.symbol, '');
             const deployment = await marketplace.deployed();
 
             console.log(deployment);

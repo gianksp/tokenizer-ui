@@ -240,7 +240,7 @@ const Tokenizer = ({ t,  onMint }) => {
                 event: minter,
                 category: 'NFT',
                 type: minter.type,
-                quantity: minter.amount
+                quantity: parseInt(minter.amount)
             }).save();
     
             setMinting({

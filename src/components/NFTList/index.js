@@ -28,6 +28,7 @@ const NFTList = () => {
         const profile = await UserProfile.getCurrentUser();
         console.log(profile);
         const myNfts = await NFT.getFromUser(profile);
+        console.log(myNfts);
         setNfts(myNfts);
     };
 
@@ -42,7 +43,7 @@ const NFTList = () => {
         nfts.forEach((nft, index) => {
             console.log(nft);
             list.push(
-                <Grid item md={3} xs={2} key={index}>
+                <Grid item xs={12} md={6} lg={4} key={index}>
                     <NFTCard nft={nft} />
                 </Grid>
             )
