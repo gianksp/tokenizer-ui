@@ -11,6 +11,8 @@ const { contracts: Bytecode, ERC721DappifyV1, ERC1155DappifyV1 } = artifacts;
 
 const { getProviderPreference } = utils.localStorage;
 
+const { NETWORKS } = constants;
+
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -24,6 +26,8 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
         loading: false,
         error: null
     });
+
+    const targetNetwork = NETWORKS[minter.chainId].chainName;
 
 
     const handleTokenImageChange = async (files) => {
@@ -154,49 +158,51 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
             aria-describedby="collection_dialog"
             onBackdropClick={onClose}
         >
-        <DialogTitle className="collection__title dialog__title" textAlign="left">Collection {minter.type}</DialogTitle>
+        <DialogTitle className="collection__title dialog__title" textAlign="left">Creating a new ({minter.type}) Collection in {targetNetwork}</DialogTitle>
         <DialogContent className="collection__content">
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                     <Dropzone handleChange={handleTokenImageChange} />
                 </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        className="text__field"
-                        label="Display name (required)"
-                        placeholder="Enter collection name"
-                        helperText="Token name cannot be changed in the future"
-                        name="name"
-                        fullWidth
-                        onChange={handleChange}
-                    />
+                <Grid item xs={6}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                className="text__field"
+                                label="Display name"
+                                placeholder="Enter collection name"
+                                name="name"
+                                fullWidth
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                className="text__field"
+                                label="Description"
+                                name="description"
+                                rows={3} 
+                                multiline
+                                fullWidth
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                className="text__field"
+                                label="Symbol e.g BAYC"
+                                placeholder="Enter token symbol"
+                                name="symbol"
+                                fullWidth
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
                         className="text__field"
-                        label="Symbol (required)"
-                        placeholder="Enter token symbol"
-                        name="symbol"
-                        fullWidth
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        className="text__field"
-                        label="Description (optional)"
-                        placeholder="Spread some words about your token collection"
-                        name="description"
-                        fullWidth
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        className="text__field"
-                        label="Short url"
-                        placeholder="Enter collection name"
-                        helperText="Will be used as public URL"
+                        label="External URL"
                         name="shortUrl"
                         fullWidth
                         onChange={handleChange}
@@ -205,17 +211,21 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
                 <Grid item xs={12}>
                     <Alert severity="warning">Gas fees apply</Alert>
                 </Grid>
-                <Grid item xs={12}>
-                    {creatingCollection.error && (<Alert  severity="error">{creatingCollection.error}</Alert>)}
-                </Grid>
-                <Grid item xs={12}>
-                    {creatingCollection.data && (<Alert severity="success">Your collection is now live <a href={creatingCollection.data} target="_blank" rel="noreferrer">view your collection</a></Alert>)}
-                </Grid>
+                {creatingCollection.error && (
+                    <Grid item xs={12}>
+                        <Alert  severity="error">{creatingCollection.error}</Alert>
+                    </Grid>
+                )}
+                {creatingCollection.data && (
+                    <Grid item xs={12}>
+                        <Alert severity="success">Your collection is now live <a href={creatingCollection.data} target="_blank" rel="noreferrer">view your collection</a></Alert>
+                    </Grid>
+                )}
             </Grid>
         </DialogContent>
-            <DialogActions>
-                {!creatingCollection.data && (<Button onClick={handleSubmit} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>Create collection</Button>)}
-                {creatingCollection.data && (<Button onClick={onClose} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>Close and continue</Button>)}
+            <DialogActions sx={{ p: 2 }}>
+                {!creatingCollection.data && (<Button size="large" onClick={handleSubmit} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>Create collection</Button>)}
+                {creatingCollection.data && (<Button size="large" onClick={onClose} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>Close and continue</Button>)}
             </DialogActions>
         </Dialog>
    );

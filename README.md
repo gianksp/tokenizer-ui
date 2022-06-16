@@ -18,5 +18,12 @@ key: lazy,
 value: https://marketplace.mysubdomain.dappify.com/profile
 ```
 
+3. Set an image background
+```
+type: layout,
+key: background,
+value: <image_url>
+```
+
 #### Author
 Dappify

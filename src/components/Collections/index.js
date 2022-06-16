@@ -3,8 +3,9 @@ import { Box, MenuItem, Select, FormControl, Grid, Alert, Input, InputLabel, For
 import Chains from 'components/Chains';
 import { MinterContext } from 'components';
 import CollectionDialog from 'components/CollectionDialog';
+import isEmpty from 'lodash/isEmpty';
 
-const Collections = ({t, defaultChainId, handleAuth, collections, onClose }) => {
+const Collections = ({t, defaultChainId, handleAuth, collections, onClose, hidden=false }) => {
     const {minter, setMinter} = useContext(MinterContext);
     const [createCollectionDialog, setCreateCollectionDialog] = useState();
     const [config, setConfig] = useState({});
@@ -13,10 +14,27 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose }) => 
         const cfg = await fetch(`dappify.json`)
         .then((r) => r.json())
         setConfig(cfg);
-    }
+    };
+
+    const setDefaultCollection = async () => {
+        const newMinter = {...minter};
+        newMinter.collection = config?.contract[minter.chainId];
+        setMinter(newMinter);
+    };
+
     useEffect(() => {
         loadLocalConfig();
     }, []);
+
+    useEffect(() => {
+        if (!isEmpty(config)) {
+            console.log(config.contract);
+            const defaultCollection = config?.contract[minter.chainId];
+            if (isEmpty(minter.collection) && !isEmpty(defaultCollection)) {
+                setDefaultCollection();
+            }
+        }
+    }, [minter.chainId, config]);
 
     const handleChange = (files) => {
         const targetFile = files[0];
@@ -38,35 +56,38 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose }) => 
     // );
 
     const collectionItem = (collection, onClick) => (
-        <Button disableElevation
-                fullWidth
-                sx={{
-                    height: 175,
-                    width: 175,
-                    mr: 2
-                }}
-                variant="outlined"
-                onClick={onClick}>
-                <Grid container>
-                    <Box sx={{
-                        position: 'absolute',
-                        background: `url(${collection.metadata.image})`,
-                        backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
+        <Grid item>
+            <Button disableElevation
+                    fullWidth
+                    sx={{
                         height: 175,
                         width: 175,
-                        left: 0,
-                        top: 0,
-                        opacity: 0.25
-                    }} />
-                    <Grid item xs={12}>
-                        <Typography variant="h4" fontWeight="bold">{collection.metadata.name}</Typography>
+                        mr: 2,
+                        overflow: 'hidden'
+                    }}
+                    variant="outlined"
+                    onClick={onClick}>
+                    <Grid container>
+                        <Box sx={{
+                            position: 'absolute',
+                            background: `url(${collection.metadata.image})`,
+                            backgroundSize: 'cover',
+                            backgroundRepeat: 'no-repeat',
+                            height: 175,
+                            width: 175,
+                            left: 0,
+                            top: 0,
+                            opacity: 0.25
+                        }} />
+                        <Grid item xs={12}>
+                            <Typography variant="h4" fontWeight="bold">{collection.metadata.name}</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="body">{collection.metadata.description}</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="body">{collection.metadata.description}</Typography>
-                    </Grid>
-                </Grid>
-        </Button>
+            </Button>
+        </Grid>
     )
 
     const newCollection = collectionItem({
@@ -88,9 +109,7 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose }) => 
             description: 'Default Collection'
         }
     }, () => {
-        const newMinter = {...minter};
-        newMinter.collection = config?.contract[minter.chainId];
-        setMinter(newMinter);
+        setDefaultCollection();
     });
 
     const renderCollections = () => {
@@ -112,17 +131,26 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose }) => 
         return list;
     }
 
-    return (
-        
-        <Grid container sx={{ width: '100%', p: 2 }} spacing={2}>
-            {minter.chainId && renderCollections()}
+    const collectionSelector = (
+        <Grid container sx={{ width: '100%', mt: 2  }} spacing={2}>
+            <Grid item xs={12}>
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                    <Typography variant="h1" fontSize="1.3em" fontWeight="bold">4. Select a Collection ({minter.type})</Typography>
+                    <Typography variant="body" fontSize="1em" fontWeight="300">
+                        Use an existing NFT collection or launch your new one by deploying a smart contract
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Grid container sx={{ p: 2 }} spacing={1}>
+                {minter.chainId && renderCollections()}
+            </Grid>
             <CollectionDialog open={createCollectionDialog} onClose={() => {
                 onClose();
                 setCreateCollectionDialog(false);
             }} handleChange={handleChange} handleAuth={handleAuth} />
         </Grid>
-
-    );
+    )
+    return !hidden ? (collectionSelector) : <span />
 }
 
 export default Collections;

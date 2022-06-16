@@ -21,9 +21,9 @@ const Properties = ({t, defaultChainId, handleAuth }) => {
     return (
         
         <Grid container sx={{ width: '100%' }} spacing={2}>
-            <Grid item xs={12}>
+            {/*<Grid item xs={12}>
                 <Chains defaultChainId={defaultChainId} />
-            </Grid>
+    </Grid> */}
             <Grid item xs={12}>
                 <TextField  label="Title" 
                             value={minter.metadata.name} 
@@ -38,7 +38,7 @@ const Properties = ({t, defaultChainId, handleAuth }) => {
             <Grid item xs={12}>
                 <TextField  multiline 
                             value={minter.metadata.description} 
-                            rows={4} 
+                            rows={3} 
                             label="Description" 
                             fullWidth
                             onChange={(e) => {
@@ -48,8 +48,8 @@ const Properties = ({t, defaultChainId, handleAuth }) => {
                             }}
                 />
             </Grid>
-            <Grid item xs={6}>
-                <Grid container>
+             {/*<Grid item xs={6}>
+               <Grid container>
                     <Grid item xs={6}>
                         <Button disableElevation 
                                 variant={ minter.type === 'ERC721' ? 'contained' : 'outlined' } 
@@ -76,21 +76,24 @@ const Properties = ({t, defaultChainId, handleAuth }) => {
                         </Button>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Grid item xs={6}>
-                <TextField  disabled={minter.type === 'ERC721'} 
-                            label="Quantity" 
+                            </Grid>*/}
+            <Grid item xs={4}>
+                <TextField  label="# of copies" 
                             type="number" 
                             fullWidth 
                             value={minter.amount}
                             onChange={(e) => {
                                 const newMinter = {...minter};
                                 newMinter.amount = e.target.value;
+                                newMinter.type = newMinter.amount > 1 ? 'ERC1155' : 'ERC721';
                                 setMinter(newMinter);
                             }}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={8}>
+                <Chains defaultChainId={defaultChainId} />
+            </Grid>
+            {/*<Grid item xs={12}>
                 <TextField  label="Social Media URL (optional)" 
                             fullWidth
                             value={minter.metadata.external_url} 
@@ -100,7 +103,7 @@ const Properties = ({t, defaultChainId, handleAuth }) => {
                                 setMinter(newMinter);
                             }}
                 />
-            </Grid>
+                        </Grid> */}
             {/*<Grid item xs={6}>
                 <Button disableElevation variant={ minter.collection === constants.CONTRACTS.tokenizer[minter.chainId] ? 'contained' : 'outlined' } fullWidth onClick={() => {
                     const newMinter = {...minter};
