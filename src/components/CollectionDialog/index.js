@@ -1,29 +1,30 @@
 import React, { forwardRef, useState, useContext } from "react";
-import { Typography, Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, Slide, Alert } from '@mui/material';
-import { DappifyContext, Collection, constants, utils, contracts as artifacts, Transaction } from 'react-dappify';
+import { Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, Slide, Alert } from '@mui/material';
+import { DappifyContext, constants, utils, contracts as artifacts, Transaction } from 'react-dappify';
 import Dropzone from 'components/Dropzone';
 import { MinterContext } from 'components';
 import { ethers } from 'ethers';
-// import DappifyNFT from 'react-dappify/contracts/ERC721DappifyV1.sol/ERC721DappifyV1.json';
-// import Bytecode from 'react-dappify/contracts/artifacts/contracts.json';
 
-const { contracts: Bytecode, ERC721DappifyV1, ERC1155DappifyV1 } = artifacts;
+const { contracts: Bytecode } = artifacts;
 
 const { getProviderPreference } = utils.localStorage;
+
+const { NETWORKS } = constants;
 
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
-    const { Provider, isAuthenticated, logout, user, switchToChain } = useContext(DappifyContext);
+const CollectionDialog = ({ open=false, onClose, t }) => {
+    const { Provider, switchToChain } = useContext(DappifyContext);
     const {minter, setMinter} = useContext(MinterContext);
-    const [collection] = useState();
     const [creatingCollection, setCreatingCollection] = useState({
         data: null,
         loading: false,
         error: null
     });
+
+    const targetNetwork = NETWORKS[minter.chainId].chainName;
 
 
     const handleTokenImageChange = async (files) => {
@@ -42,8 +43,6 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
 
     const handleSubmit = async () => {
 
-        let tokenId;
-        let contractAddress;
 
         const pref = getProviderPreference();
         const web3Provider = await Provider.enableWeb3(pref);
@@ -69,7 +68,6 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
                 Bytecode.output.contracts['contracts/ERC1155DappifyV1.sol'].ERC1155DappifyV1;
                 console.log(contract);
 
-            console.log(contract);
             // return;
             const abi = contract.abi;
             const bytecode = contract.evm.bytecode;
@@ -103,32 +101,6 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
                 type: minter.type
             }).save();
 
-            // await new Collection({
-            //     token_address: newMinter.collection,
-            //     symbol: newMinter.collectionMetadata.symbol,
-            //     name: newMinter.collectionMetadata.name,
-            //     banner: newMinter.collectionMetadata.image,
-            //     description: newMinter.collectionMetadata.description,
-            //     chainId: newMinter.chainId,
-            // }).save();
-
-            // // Generate metadata and save to IPFS
-            // const metadataFile = new Provider.File('metadata.json', {
-            //   base64: Buffer.from(JSON.stringify(minter.metadata)).toString("base64"),
-            // });
-            // await metadataFile.saveIPFS();
-            // const metadataFileUrl = metadataFile.ipfs();
-            
-            // let response;
-            // const signer = web3Provider.getSigner();
-            // const userAddress = user.get('ethAddress');
-            // contractAddress = constants.CONTRACTS.tokenizer[minter.chainId];
-            // const contract = new ethers.Contract(contractAddress, DappifyNFT.abi, signer);
-            // let transaction = await contract.mint(userAddress, userAddress, minter.royalties*100, metadataFileUrl);
-            // const tx = await transaction.wait();
-            // tokenId = tx.events[0].topics[3];
-            // response = `${constants.NETWORKS[minter.chainId].blockExplorerUrls[0]}/tx/${tx.transactionHash}`;
-
             setCreatingCollection({
                 data: response,
                 loading: false,
@@ -154,68 +126,73 @@ const CollectionDialog = ({ open=false, onClose, handleAuth }) => {
             aria-describedby="collection_dialog"
             onBackdropClick={onClose}
         >
-        <DialogTitle className="collection__title dialog__title" textAlign="left">Collection {minter.type}</DialogTitle>
+        <DialogTitle className="collection__title dialog__title" textAlign="left">{t('Creating a new Collection in')} {targetNetwork} ({minter.type})</DialogTitle>
         <DialogContent className="collection__content">
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                     <Dropzone handleChange={handleTokenImageChange} />
                 </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        className="text__field"
-                        label="Display name (required)"
-                        placeholder="Enter collection name"
-                        helperText="Token name cannot be changed in the future"
-                        name="name"
-                        fullWidth
-                        onChange={handleChange}
-                    />
+                <Grid item xs={6}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                className="text__field"
+                                label={t("Display name")}
+                                name="name"
+                                fullWidth
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                className="text__field"
+                                label={t("Description")}
+                                name="description"
+                                rows={3} 
+                                multiline
+                                fullWidth
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                className="text__field"
+                                label={t("Symbol e.g BAYC")}
+                                placeholder="Enter token symbol"
+                                name="symbol"
+                                fullWidth
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
                         className="text__field"
-                        label="Symbol (required)"
-                        placeholder="Enter token symbol"
-                        name="symbol"
-                        fullWidth
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        className="text__field"
-                        label="Description (optional)"
-                        placeholder="Spread some words about your token collection"
-                        name="description"
-                        fullWidth
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        className="text__field"
-                        label="Short url"
-                        placeholder="Enter collection name"
-                        helperText="Will be used as public URL"
+                        label={t("External URL")}
                         name="shortUrl"
                         fullWidth
                         onChange={handleChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Alert severity="warning">Gas fees apply</Alert>
+                    <Alert sx={{ wordBreak: 'break-word' }} severity="warning">{t('Gas fees apply')}</Alert>
                 </Grid>
-                <Grid item xs={12}>
-                    {creatingCollection.error && (<Alert  severity="error">{creatingCollection.error}</Alert>)}
-                </Grid>
-                <Grid item xs={12}>
-                    {creatingCollection.data && (<Alert severity="success">Your collection is now live <a href={creatingCollection.data} target="_blank" rel="noreferrer">view your collection</a></Alert>)}
-                </Grid>
+                {creatingCollection.error && (
+                    <Grid item xs={12}>
+                        <Alert  sx={{ wordBreak: 'break-word' }} severity="error">{creatingCollection.error}</Alert>
+                    </Grid>
+                )}
+                {creatingCollection.data && (
+                    <Grid item xs={12}>
+                        <Alert sx={{ wordBreak: 'break-word' }} severity="success">{t("Your collection is now live")} <a href={creatingCollection.data} target="_blank" rel="noreferrer">{t("View your collection")}</a></Alert>
+                    </Grid>
+                )}
             </Grid>
         </DialogContent>
-            <DialogActions>
-                {!creatingCollection.data && (<Button onClick={handleSubmit} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>Create collection</Button>)}
-                {creatingCollection.data && (<Button onClick={onClose} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>Close and continue</Button>)}
+            <DialogActions sx={{ p: 2 }}>
+                {!creatingCollection.data && (<Button size="large" onClick={handleSubmit} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>{t("Create collection")}</Button>)}
+                {creatingCollection.data && (<Button size="large" onClick={onClose} disabled={creatingCollection.loading} variant="contained" className="collection__button" fullWidth>{t("Close and continue")}</Button>)}
             </DialogActions>
         </Dialog>
    );

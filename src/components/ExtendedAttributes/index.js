@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
-import { OutlinedInput, InputAdornment,  MenuItem, Select, FormControl, Grid, Alert, Input, InputLabel, FormHelperText, TextField, Paper, Button, Typography } from '@mui/material';
-import Chains from 'components/Chains';
+import { OutlinedInput, InputAdornment, Grid, TextField, Button, Typography } from '@mui/material';
 import { MinterContext } from 'components';
 
 const ExtendedAttributes = ({t}) => {
     const {minter, setMinter} = useContext(MinterContext);
     const [fields, setFields] = useState(minter.additionalFields);
+
     useEffect(() => {
         const newMinter = {...minter};
         newMinter.additionalFields = fields;
@@ -56,10 +56,16 @@ const ExtendedAttributes = ({t}) => {
     }
 
     return (
-        <Grid container sx={{ width: '100%', mt: 5 }} spacing={2}>
-            <Grid item sx={12}>
+        <Grid container sx={{ width: '100%', mt: 0 }} spacing={2}>
+            <Grid item xs={12} sx={{ mt: 0 }}>
+                <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('1. Re-sale Royalties')}</Typography>
+                <Typography variant="body" fontSize="1em" fontWeight="300">
+                    {t('You, as a content creator, will receive a royalty based on the percentage everytime this NFT is being sold in a marketplace supporting')} <a height={10} size="small" href="https://eips.ethereum.org/EIPS/eip-2981" target="_blank" rel="noreferrer">EIP2981</a>
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
                 <OutlinedInput
-                    id="outlined-adornment-password"
+                    id="royalties"
                     type='number'
                     fullWidth
                     defaultValue={minter.royalties}
@@ -73,18 +79,34 @@ const ExtendedAttributes = ({t}) => {
                         %
                     </InputAdornment>
                     }
-                    label="Royalties"
+                    label={t('Royalties')}
+                    inputProps={{
+                        'aria-label': 'Royalties %',
+                    }}
                 />
             </Grid>
-            <Grid item xs={12} sx={{ mt: 5 }}>
-                <Typography>Metadata</Typography>
+            <Grid item xs={12} sx={{ mt: 2 }}>
+                <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t("2. Additional Fields")}</Typography>
+                <Typography variant="body" fontSize="1em" fontWeight="300">
+                    {t('You can add custom fields to the metadata of this NFT in case you need to store custom properties e.g. promo_code: 1155 in order to support different')} <a href="https://docs.opensea.io/docs/metadata-standards" target="_blank" rel="noreferrer">metadata standards</a>
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <TextField  label={t("Social Media URL (optional)")}
+                            fullWidth
+                            value={minter.metadata.external_url} 
+                            onChange={(e) => {
+                                const newMinter = {...minter};
+                                newMinter.metadata.external_url = e.target.value;
+                                setMinter(newMinter);
+                            }}
+                />
             </Grid>
             {renderFields()}
             <Grid item xs={12}>
-                <Button variant="contained" onClick={addField}>Add</Button>
+                <Button size="large" variant="contained" onClick={addField}>{t("Add Custom Metadata Fields")}</Button>
             </Grid>
         </Grid>
-
     );
 }
 
