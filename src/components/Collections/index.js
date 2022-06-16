@@ -1,11 +1,10 @@
 import { useContext, useState, useEffect } from 'react';
-import { Box, MenuItem, Select, FormControl, Grid, Alert, Input, InputLabel, FormHelperText, TextField, Paper, Button, Typography } from '@mui/material';
-import Chains from 'components/Chains';
+import { Box, Grid, Button, Typography } from '@mui/material';
 import { MinterContext } from 'components';
 import CollectionDialog from 'components/CollectionDialog';
 import isEmpty from 'lodash/isEmpty';
 
-const Collections = ({t, defaultChainId, handleAuth, collections, onClose, hidden=false }) => {
+const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
     const {minter, setMinter} = useContext(MinterContext);
     const [createCollectionDialog, setCreateCollectionDialog] = useState();
     const [config, setConfig] = useState({});
@@ -65,7 +64,7 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose, hidde
                         mr: 2,
                         overflow: 'hidden'
                     }}
-                    variant="outlined"
+                    variant={minter?.collection && minter?.collection[minter?.type] === collection?.contract ? 'contained' : 'outlined'}
                     onClick={onClick}>
                     <Grid container>
                         <Box sx={{
@@ -103,6 +102,7 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose, hidde
                                 config?.contract[minter?.chainId] && 
                                 config?.contract[minter?.chainId][minter.type] &&
                                 collectionItem({
+        contract: config?.contract[minter?.chainId][minter.type],
         metadata: {
             image: 'https://i.ibb.co/5MSMLFr/output-onlinepngtools-2.png',
             name: 'Dappify',
@@ -118,6 +118,7 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose, hidde
             dappifyCollection
         ];
         const elements = collections?.results?.filter((item) => item.chainId === minter.chainId && item.type === minter.type) || [];
+        console.log(elements);
         elements.forEach((collection) => {
             console.log(collection);
             console.log(minter);
@@ -137,14 +138,14 @@ const Collections = ({t, defaultChainId, handleAuth, collections, onClose, hidde
                 <Grid item xs={12} sx={{ mt: 2 }}>
                     <Typography variant="h1" fontSize="1.3em" fontWeight="bold">4. Select a Collection ({minter.type})</Typography>
                     <Typography variant="body" fontSize="1em" fontWeight="300">
-                        Use an existing NFT collection or launch your new one by deploying a smart contract
+                        {t('Use an existing NFT collection or launch your new one by deploying a smart contract')}
                     </Typography>
                 </Grid>
             </Grid>
             <Grid container sx={{ p: 2 }} spacing={1}>
                 {minter.chainId && renderCollections()}
             </Grid>
-            <CollectionDialog open={createCollectionDialog} onClose={() => {
+            <CollectionDialog open={createCollectionDialog} t={t} onClose={() => {
                 onClose();
                 setCreateCollectionDialog(false);
             }} handleChange={handleChange} handleAuth={handleAuth} />

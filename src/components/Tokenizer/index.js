@@ -1,29 +1,25 @@
-import React, { createContext, useMemo, useState, useContext, useEffect } from 'react';
+import React, { useMemo, useState, useContext, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import PropTypes from 'prop-types';
-import { IconButton, TextField, Checkbox, FormGroup, FormControlLabel, Snackbar, FormControl, Grid, Paper, Input, InputLabel, FormHelperText, Button, Alert, Tabs, Tab, Typography, Box } from '@mui/material';
+import { IconButton, Grid, Button, Alert, Tabs, Tab, Typography, Box } from '@mui/material';
+import { ethers } from 'ethers';
+import { DappifyContext, constants, utils, contracts as artifacts, Transaction, UserProfile, Property, Logger } from 'react-dappify';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { MinterContext } from 'components';
 import Dropzone from 'components/Dropzone';
 import Properties from 'components/Properties';
-import Chains from 'components/Chains';
-import Editor from 'components/Editor';
-import Preview from 'components/Preview';
 import ExtendedAttributes from 'components/ExtendedAttributes';
-import { MinterContext } from 'components';
-import { DappifyContext, constants, utils, contracts as artifacts, Transaction, UserProfile, Property } from 'react-dappify';
 import MetadataAttributes from 'components/MetadataAttributes';
-import { ethers } from 'ethers';
-// import ERC721DappifyV1 from 'react-dappify/contracts/ERC721DappifyV1.sol/ERC721DappifyV1.json';
-// import ERC1155DappifyV1 from 'react-dappify/contracts/ERC1155DappifyV1.sol/ERC1155DappifyV1.json';
 import WalletsDialog from 'components/WalletsDialog';
 import Collections from 'components/Collections';
 import NFTList from 'components/NFTList';
 import Logo from 'components/Logo';
-import Steps from 'components/Steps';
-import LogoutIcon from '@mui/icons-material/Logout';
+import Editor from 'components/Editor';
+
 
 const { formatAddress } = utils.format;
 
-const { contracts: Bytecode, ERC721DappifyV1, ERC1155DappifyV1 } = artifacts;
+const { ERC721DappifyV1, ERC1155DappifyV1 } = artifacts;
 const { setPreference, getProviderPreference } = utils.localStorage;
 
 function TabPanel(props) {
@@ -87,7 +83,7 @@ const minterProps = {
 };
 
 const Tokenizer = ({ t,  onMint }) => {
-    const { Provider, isAuthenticated, logout, user, switchToChain, configuration } = useContext(DappifyContext);
+    const { Provider, isAuthenticated, logout, user, configuration } = useContext(DappifyContext);
     const [minter, setMinter] = useState(minterProps);
     const [value, setValue] = useState(0);
     const [items, setItems] = useState([]);
@@ -96,6 +92,7 @@ const Tokenizer = ({ t,  onMint }) => {
     const [options, setOptions] = useState([]);
     const defaultChainId = options.find((opt) => opt.key === 'chainId' )?.value || '';
     const [background, setBackground] = useState();
+    const [loading, setLoading] = useState(false);
 
     const context = useMemo(
         () => ({ minter, setMinter }), 
@@ -161,8 +158,7 @@ const Tokenizer = ({ t,  onMint }) => {
     const handleSubmit = async () => {
         let tokenId;
         let contractAddress;
-
-        console.log(minter);
+        setLoading(true);
 
         const pref = getProviderPreference();
         const web3Provider = await Provider.enableWeb3(pref);
@@ -178,7 +174,7 @@ const Tokenizer = ({ t,  onMint }) => {
 
             // Append image file
             if (minter.metadata.image && minter.metadata.image instanceof File) {
-                console.log('Uploading image file');
+                Logger.debug('Uploading image file');
                 const imageFile = new Provider.File('image', minter.metadata.image);
                 await imageFile.saveIPFS();
                 const imageFileUrl = imageFile.ipfs();
@@ -186,7 +182,7 @@ const Tokenizer = ({ t,  onMint }) => {
             }
             // Append audio file
             if (minter.metadata.youtube_url && minter.metadata.youtube_url instanceof File) {
-                console.log('Uploading video file');
+                Logger.debug('Uploading video file');
                 const videoFile = new Provider.File('youtube_url', minter.metadata.youtube_url);
                 await videoFile.saveIPFS();
                 const videoFileUrl = videoFile.ipfs();
@@ -194,7 +190,7 @@ const Tokenizer = ({ t,  onMint }) => {
             }
             // Append video file
             if (minter.metadata.animation_url && minter.metadata.animation_url instanceof File) {
-                console.log('Uploading audio file');
+                Logger.debug('Uploading audio file');
                 const audioFile = new Provider.File('animation_url', minter.metadata.animation_url);
                 await audioFile.saveIPFS();
                 const audioFileUrl = audioFile.ipfs();
@@ -215,13 +211,15 @@ const Tokenizer = ({ t,  onMint }) => {
                 const signer = web3Provider.getSigner();
                 const userAddress = user.get('ethAddress');
                 contractAddress = minter.collection[minter.type];
-
+                const royaltyValue = minter.royalties*100;
                 if (minter.type === 'ERC721') {
                     contract = new ethers.Contract(contractAddress, ERC721DappifyV1.abi, signer);
-                    transaction = await contract.mint(userAddress, userAddress, minter.royalties*100, metadataFileUrl);
+                    transaction = await contract.mint(userAddress, userAddress, royaltyValue, metadataFileUrl);
+                    Logger.debug(`Minting ERC721 contract: ${contractAddress}, owner: ${userAddress}, recipient:${userAddress}, royalties: ${royaltyValue}, metadata: ${metadataFileUrl}`);
                 } else if (minter.type === 'ERC1155') {
                     contract = new ethers.Contract(contractAddress, ERC1155DappifyV1.abi, signer);
-                    transaction = await contract.mint(userAddress, userAddress, minter.royalties*100, metadataFileUrl, minter.amount);
+                    transaction = await contract.mint(userAddress, userAddress, royaltyValue, metadataFileUrl, minter.amount);
+                    Logger.debug(`Minting ERC721 contract: ${contractAddress}, owner: ${userAddress}, recipient:${userAddress}, royalties: ${royaltyValue}, metadata: ${metadataFileUrl}, amount: ${minter.amount}`);
                 } else {
                     throw new Error('Unsupported type');
                 }
@@ -265,6 +263,8 @@ const Tokenizer = ({ t,  onMint }) => {
                 loading: false,
                 error: err.message
             })
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -300,24 +300,24 @@ const Tokenizer = ({ t,  onMint }) => {
         <Grid container sx={{
             px: '20%'
         }}>
-            <WalletsDialog isOpen={showWalletDialog} onClose={() => setShowWalletDialog(false)} />
+            <WalletsDialog isOpen={showWalletDialog} onClose={() => setShowWalletDialog(false)} t={t} />
             <Grid container sx={{ width: '100%', p: 4 }} spacing={2}>
                 <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="My NFT" {...a11yProps(0)} />
-                    <Tab label="Advanced (Optional)" {...a11yProps(1)} />
-                    <Tab label="Metadata Source" {...a11yProps(2)} />
+                  <Tabs value={value} onChange={handleChange} aria-label="options">
+                    <Tab label={t('My NFT')} {...a11yProps(0)} />
+                    <Tab label={t('Advanced (Optional)')} {...a11yProps(1)} />
+                    <Tab label={t('Metadata Source')} {...a11yProps(2)} />
                     {/* isAuthenticated && (<Tab label="My NFTs" {...a11yProps(3)} />) */}
                   </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={6}>
-                            <Dropzone initialFiles={getInitialDropzoneFiles()} handleChange={handleTokenImageChange} />
+                            <Dropzone initialFiles={getInitialDropzoneFiles()} handleChange={handleTokenImageChange} t={t} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Properties defaultChainId={defaultChainId} handleAuth={handleAuth} />
+                            <Properties defaultChainId={defaultChainId} handleAuth={handleAuth} t={t} />
                         </Grid>
                         {/*<Grid item xs={12}>
                             <FormGroup>
@@ -329,37 +329,42 @@ const Tokenizer = ({ t,  onMint }) => {
                             </FormGroup>
                             </Grid> */}
 
-                            <Collections hidden={true} defaultChainId={defaultChainId} handleAuth={handleAuth} collections={items} onClose={() => {
+                            <Collections hidden={true} defaultChainId={defaultChainId} handleAuth={handleAuth} collections={items} t={t} onClose={() => {
                                 loadUserCollections();
                             }} />
 
                             {minting.error && (
                                 <Grid item xs={12}>
-                                    <Alert  severity="error">{minting.error}</Alert>
+                                    <Alert sx={{ wordBreak: 'break-word' }} severity="error">{minting.error}</Alert>
                                 </Grid>
                             )}
                             {minting.data && (
                                 <Grid item xs={12}>
-                                    {!minter.lazy && (<Alert severity="success">Your minting was successful <a href={minting.data} target="_blank" rel="noreferrer">view your transaction</a></Alert>)}
-                                    {minter.lazy && (<Alert severity="success">Your token has been minted</Alert>)}
+                                    {!minter.lazy && (<Alert severity="success">{t('Your minting was successful')} <a href={minting.data} target="_blank" rel="noreferrer">{t('View your transaction')}</a></Alert>)}
+                                    {minter.lazy && (<Alert severity="success">{t('Your token has been minted')}</Alert>)}
                                 </Grid>
                             )}
                             {!isAuthenticated && (
                                 <Grid item xs={12}>
-                                    <Button variant="contained" size="large" fullWidth  onClick={handleAuth}>Connect your wallet to get started!</Button>
+                                    <Button variant="contained" size="large" fullWidth  onClick={handleAuth}>{t('Connect your wallet to get started!')}</Button>
                                 </Grid>
                             )}
                             {isAuthenticated && (
                                 <Grid item xs={12}>
-                                    <Button variant="contained" size="large" fullWidth onClick={handleSubmit}>Create your NFT</Button>
+                                    <Button disabled={loading} variant="contained" size="large" fullWidth onClick={handleSubmit}>
+                                        { !loading ? 
+                                            t('Create your NFT') :
+                                            t('Please wait...')
+                                        }
+                                    </Button>
                                 </Grid>
                             )}
                     </Grid>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <ExtendedAttributes />
-                    <MetadataAttributes />
-                    <Collections defaultChainId={defaultChainId} handleAuth={handleAuth} collections={items} onClose={() => {
+                    <ExtendedAttributes t={t}/>
+                    <MetadataAttributes t={t}/>
+                    <Collections defaultChainId={defaultChainId} handleAuth={handleAuth} collections={items} t={t} onClose={() => {
                         loadUserCollections();
                     }} />
                 </TabPanel>
@@ -369,14 +374,14 @@ const Tokenizer = ({ t,  onMint }) => {
                             <Preview />
                 </Grid> */}
                         <Grid item xs={12}>
-                            <Editor />
+                            <Editor t={t}/>
                         </Grid>
                     </Grid>
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <NFTList />
+                            <NFTList t={t}/>
                         </Grid>
                     </Grid>
                 </TabPanel>
@@ -415,7 +420,7 @@ const Tokenizer = ({ t,  onMint }) => {
                         {
                             isAuthenticated && (
                                 <div>
-                                    <span><b>Welcome</b> {formatAddress(user.get('ethAddress'))} </span>
+                                    <span><b>{t('Welcome')}</b> {formatAddress(user.get('ethAddress'))} </span>
                                     <IconButton aria-label="logout" color="primary" onClick={logout}>
                                         <LogoutIcon />
                                     </IconButton>
@@ -424,10 +429,10 @@ const Tokenizer = ({ t,  onMint }) => {
                         }
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h1" fontSize="1.75em" fontWeight={900}>NFT Forge</Typography>
+                        <Typography variant="h1" fontSize="1.75em" fontWeight={900}>{t('NFT Forge')}</Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h2" fontSize="1.2em" fontWeight={300}>The simplest, yet most flexible way to create NFTs <i>Anywhere</i></Typography>
+                        <Typography variant="h2" fontSize="1.2em" fontWeight={300}>{t('The simplest, yet most flexible way to create NFTs')} <i>{t('Anywhere')}</i></Typography>
                     </Grid>
                     {/*<Grid item xs={12} sx={{ mt: 3 }}>
                         <Steps activeStep={activeStep} />

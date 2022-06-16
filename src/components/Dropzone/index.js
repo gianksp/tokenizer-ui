@@ -1,11 +1,8 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { DropzoneArea } from "mui-file-dropzone";
-import { MinterContext } from 'components';
 import uniq from 'lodash/uniq';
 
-const Dropzone = ({ initialFiles=[], handleChange }) => {
-    const {minter, setMinter} = useContext(MinterContext);
-    const [files, setFiles] = useState([]);
+const Dropzone = ({ initialFiles=[], handleChange, t=()=>{} }) => {
 
     return <DropzoneArea    showPreviews={false}
                             acceptedFiles={[
@@ -15,7 +12,7 @@ const Dropzone = ({ initialFiles=[], handleChange }) => {
                                 "audio/mpeg"
                             ]}
                             maxFileSize={10485760}
-                            dropzoneText="Drop your jpeg, png, mp3 audio and mp4 videos up to 10mb"
+                            dropzoneText={t("Drop your jpeg, png, mp3 audio and mp4 videos up to 10mb")}
                             initialFiles={uniq(initialFiles)}
                             onChange={handleChange} />;
 }

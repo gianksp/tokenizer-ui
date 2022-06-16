@@ -3,10 +3,9 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import { MinterContext } from 'components';
 import { Typography, Grid, Alert } from '@mui/material';
 
-const Editor = () => {
+const Editor = ({t}) => {
     const [hasError, setHasError] = useState();
     const {minter, setMinter} = useContext(MinterContext);
-
 
     // minter.medatata?.attributes = attributes;
     const [code, setCode] = useState('');
@@ -42,15 +41,14 @@ const Editor = () => {
     return (
         <Grid container spacing={2}>
             <Grid item xs={12} sx={{ mt: 2 }}>
-                <Typography variant="h1" fontSize="1.3em" fontWeight="bold">Edit the metadata source code directly</Typography>
+                <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('Edit the metadata source code directly')}</Typography>
                 <Typography variant="body" fontSize="1em" fontWeight="300">
-                    We recommend setting attributes through the basic/advanced tabs functionalities but if they fall short you can always edit manually. Notice that modifying this file will
-                    change the metadata, but these changes may not be visible by other tabs.
+                    {t('We recommend setting attributes through the basic/advanced tabs functionalities but if they fall short you can always edit manually. Notice that modifying this file will change the metadata, but these changes may not be visible by other tabs.')}
                 </Typography>
             </Grid>
             {hasError && (
                 <Grid item xs={12} sx={{ minHeight: 70 }}>
-                    <Alert severity="error">Invalid JSON structure</Alert>
+                    <Alert severity="error">{t('Invalid JSON structure')}</Alert>
                 </Grid>
             )}
             <Grid item xs={12}>
