@@ -29,7 +29,7 @@ const ExtendedAttributes = ({t}) => {
         fields.forEach((field, index) => {
             list.push(
                 <><Grid item xs={5} key={index}>
-                    <TextField label="Key"
+                    <TextField label={t('Key')}
                         defaultValue={field.key}
                         fullWidth
                         onChange={(e) => {
@@ -40,7 +40,7 @@ const ExtendedAttributes = ({t}) => {
                 </Grid><Grid item xs={5}>
                         <TextField 
                             defaultValue={field.value}
-                            label="Value"
+                            label={t('Value')}
                             fullWidth
                             onChange={(e) => {
                                 const currentFields = [...fields];
@@ -48,7 +48,7 @@ const ExtendedAttributes = ({t}) => {
                                 setFields(currentFields);
                             } } />
                     </Grid><Grid item xs={2}>
-                        <Button onClick={() => removeField(index)}>Remove</Button>
+                        <Button onClick={() => removeField(index)}>{t('Remove')}</Button>
                     </Grid></>
             )
         });

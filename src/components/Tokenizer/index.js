@@ -90,7 +90,7 @@ const Tokenizer = ({ t,  onMint }) => {
     const [minting, setMinting] = useState({ data: null, loading: false, error: null });
     const [showWalletDialog, setShowWalletDialog] = useState();
     const [options, setOptions] = useState([]);
-    const defaultChainId = options.find((opt) => opt.key === 'chainId' )?.value || '';
+    const defaultChainId = options.find((opt) => opt.key === 'chainId' )?.value || configuration?.chainId;
     const [background, setBackground] = useState();
     const [loading, setLoading] = useState(false);
 
