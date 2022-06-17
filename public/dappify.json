@@ -70,7 +70,14 @@
             "View your collection": "View your collection",
             "Create collection": "Create collection",
             "Close and continue": "Close and continue",
-            "Use an existing NFT collection or launch your new one by deploying a smart contract": "Use an existing NFT collection or launch your new one by deploying a smart contract"
+            "Use an existing NFT smart contract or launch your new one to create your NFTs on": "Use an existing NFT smart contract or launch your new one to create your NFTs on",
+            "Add Custom NFT Attributes": "Add Custom NFT Attributes",
+            "3. Custom Attributes": "3. Custom Attributes",
+            "Add custom unique attributes to your NFT to enhance rarity e.g. monster_type: electric as per": "Add custom unique attributes to your NFT to enhance rarity e.g. monster_type: electric as per",
+            "Remove": "Remove",
+            "Key": "Key",
+            "Value": "Value",
+            "4. Select a Smart Contract": "4. Select a Smart Contract"
           }
         }
       },

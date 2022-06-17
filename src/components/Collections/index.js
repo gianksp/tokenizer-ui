@@ -136,9 +136,9 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
         <Grid container sx={{ width: '100%', mt: 2  }} spacing={2}>
             <Grid item xs={12}>
                 <Grid item xs={12} sx={{ mt: 2 }}>
-                    <Typography variant="h1" fontSize="1.3em" fontWeight="bold">4. Select a Collection ({minter.type})</Typography>
+                    <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('4. Select a Smart Contract')} ({minter.type})</Typography>
                     <Typography variant="body" fontSize="1em" fontWeight="300">
-                        {t('Use an existing NFT collection or launch your new one by deploying a smart contract')}
+                        {t('Use an existing NFT smart contract or launch your new one to create your NFTs on')}
                     </Typography>
                 </Grid>
             </Grid>

@@ -29,7 +29,7 @@ const MetadataAttributes = ({t}) => {
         fields.forEach((field, index) => {
             list.push(
                 <><Grid item xs={5} key={index}>
-                    <TextField label="Key"
+                    <TextField label={t('Key')}
                         defaultValue={field.trait_type}
                         fullWidth
                         onChange={(e) => {
@@ -40,7 +40,7 @@ const MetadataAttributes = ({t}) => {
                     </Grid><Grid item xs={5}>
                         <TextField 
                             defaultValue={field.value}
-                            label="Value"
+                            label={t('Value')}
                             fullWidth
                             onChange={(e) => {
                                 const currentFields = [...fields];
@@ -48,7 +48,7 @@ const MetadataAttributes = ({t}) => {
                                 setFields(currentFields);
                             } } />
                     </Grid><Grid item xs={2}>
-                        <Button onClick={() => removeField(index)}>Remove</Button>
+                        <Button onClick={() => removeField(index)}>{t('Remove')}</Button>
                     </Grid></>
             )
         });
@@ -59,15 +59,15 @@ const MetadataAttributes = ({t}) => {
         <Grid container sx={{ width: '100%', mt: 2  }} spacing={2}>
             <Grid item xs={12}>
                 <Grid item xs={12} sx={{ mt: 2 }}>
-                    <Typography variant="h1" fontSize="1.3em" fontWeight="bold">3. Custom Attributes</Typography>
+                    <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('3. Custom Attributes')}</Typography>
                     <Typography variant="body" fontSize="1em" fontWeight="300">
-                        Add custom unique attributes to your NFT to enhance rarity e.g. monster_type: electric as per <a href="https://docs.opensea.io/docs/metadata-standards" target="_blank" rel="noreferrer">metadata standards</a>
+                        {t('Add custom unique attributes to your NFT to enhance rarity e.g. monster_type: electric as per')} <a href="https://docs.opensea.io/docs/metadata-standards" target="_blank" rel="noreferrer">metadata standards</a>
                     </Typography>
                 </Grid>
             </Grid>
             {renderFields()}
             <Grid item xs={12}>
-                <Button variant="contained" onClick={addField}>Add Custom NFT Attributes</Button>
+                <Button size="large" variant="contained" onClick={addField}>{t('Add Custom NFT Attributes')}</Button>
             </Grid>
         </Grid>
 
