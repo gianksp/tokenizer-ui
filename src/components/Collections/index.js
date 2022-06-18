@@ -3,11 +3,15 @@ import { Box, Grid, Button, Typography } from '@mui/material';
 import { MinterContext } from 'components';
 import CollectionDialog from 'components/CollectionDialog';
 import isEmpty from 'lodash/isEmpty';
+import { DappifyContext } from 'react-dappify';
+import WalletsDialog from 'components/WalletsDialog';
 
 const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
     const {minter, setMinter} = useContext(MinterContext);
+    const { Provider, isAuthenticated } = useContext(DappifyContext);
     const [createCollectionDialog, setCreateCollectionDialog] = useState();
     const [config, setConfig] = useState({});
+    const [showWalletDialog, setShowWalletDialog] = useState(false);
 
     const loadLocalConfig = async () => {
         const cfg = await fetch(`dappify.json`)
@@ -95,7 +99,14 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
             name: 'Add New',
             description: ''
         }
-    }, () => setCreateCollectionDialog(true));
+    }, async() => {
+        if (!isAuthenticated) {
+            setShowWalletDialog(true);
+        } else {
+            await Provider.switchNetwork(minter.chainId);
+            setCreateCollectionDialog(true);
+        }
+    });
 
     const dappifyCollection =   minter?.chainId && 
                                 config?.contract && 
@@ -118,7 +129,6 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
             dappifyCollection
         ];
         const elements = collections?.results?.filter((item) => item.chainId === minter.chainId && item.type === minter.type) || [];
-        console.log(elements);
         elements.forEach((collection) => {
             console.log(collection);
             console.log(minter);
@@ -134,6 +144,7 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
 
     const collectionSelector = (
         <Grid container sx={{ width: '100%', mt: 2  }} spacing={2}>
+            <WalletsDialog isOpen={showWalletDialog} onClose={() => setShowWalletDialog(false)} t={t} />
             <Grid item xs={12}>
                 <Grid item xs={12} sx={{ mt: 2 }}>
                     <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('4. Select a Smart Contract')} ({minter.type})</Typography>
