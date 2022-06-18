@@ -83,12 +83,12 @@ const minterProps = {
 };
 
 const Tokenizer = ({ t,  onMint }) => {
-    const { Provider, isAuthenticated, logout, user, configuration } = useContext(DappifyContext);
+    const { Provider, isAuthenticated, logout, user, configuration, isRightNetwork } = useContext(DappifyContext);
     const [minter, setMinter] = useState(minterProps);
     const [value, setValue] = useState(0);
     const [items, setItems] = useState([]);
     const [minting, setMinting] = useState({ data: null, loading: false, error: null });
-    const [showWalletDialog, setShowWalletDialog] = useState();
+    const [showWalletDialog, setShowWalletDialog] = useState(false);
     const [options, setOptions] = useState([]);
     const defaultChainId = options.find((opt) => opt.key === 'chainId' )?.value || configuration?.chainId;
     const [background, setBackground] = useState();
@@ -159,6 +159,8 @@ const Tokenizer = ({ t,  onMint }) => {
         let tokenId;
         let contractAddress;
         setLoading(true);
+
+        await Provider.switchNetwork(minter.chainId);
 
         const pref = getProviderPreference();
         const web3Provider = await Provider.enableWeb3(pref);
@@ -349,7 +351,7 @@ const Tokenizer = ({ t,  onMint }) => {
                                     <Button variant="contained" size="large" fullWidth  onClick={handleAuth}>{t('Connect your wallet to get started!')}</Button>
                                 </Grid>
                             )}
-                            {isAuthenticated && (
+                            {isAuthenticated &&(
                                 <Grid item xs={12}>
                                     <Button disabled={loading} variant="contained" size="large" fullWidth onClick={handleSubmit}>
                                         { !loading ? 
