@@ -157,6 +157,9 @@ const Tokenizer = ({ t,  onMint }) => {
     }
 
     const handleSubmit = async () => {
+
+        // await Provider.switchNetwork(minter.chainId);
+
         let tokenId;
         let contractAddress;
         setLoading(true);
@@ -349,22 +352,13 @@ const Tokenizer = ({ t,  onMint }) => {
                                     <Button variant="contained" size="large" fullWidth  onClick={handleAuth}>{t('Connect your wallet to get started!')}</Button>
                                 </Grid>
                             )}
-                            {isAuthenticated && isRightNetwork && (
+                            {isAuthenticated && (
                                 <Grid item xs={12}>
                                     <Button disabled={loading} variant="contained" size="large" fullWidth onClick={handleSubmit}>
                                         { !loading ? 
                                             t('Create your NFT') :
                                             t('Please confirm the transaction from your wallet and wait...')
                                         }
-                                    </Button>
-                                </Grid>
-                            )}
-                            {isAuthenticated && !isRightNetwork && (
-                                <Grid item xs={12}>
-                                    <Button variant="contained" size="large" fullWidth onClick={async () => {
-                                        await Provider.switchNetwork(minter.chainId);
-                                    }}>
-                                        {t('Switch to your selected minting network')}
                                     </Button>
                                 </Grid>
                             )}
