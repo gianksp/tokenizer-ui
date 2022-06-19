@@ -6,10 +6,9 @@ const Dropzone = ({ initialFiles=[], handleChange, t=()=>{} }) => {
 
     return <DropzoneArea    showPreviews={false}
                             acceptedFiles={[
-                                "image/jpeg", 
-                                "image/png", 
-                                "video/mp4",
-                                "audio/mpeg"
+                                "image/*",
+                                "video/*",
+                                "audio/*"
                             ]}
                             maxFileSize={10485760}
                             dropzoneText={t("Drop your jpeg, png, mp3 audio and mp4 videos up to 10mb")}
