@@ -8,17 +8,38 @@
   "version": "1.0.0",
   "category": "nft",
     "contract": {
-        "0x61": null,
-        "0xa869": null,
-        "0x13881": null,
+        "0x61": {
+          "ERC721": "0xf41A6d95169798c91E6376d93dd241d5a0Bc61D8",
+          "ERC1155": "0x2d8B2955f958294A005689ba721761a05cA5f12f"
+        },
+        "0xa869": {
+          "ERC721": "0xC20Aa5e1e51d36e21fC91D953eed2e46681412C3",
+          "ERC1155": "0x83cFd8AEAcAd6602E1DE32Ce388FcD03932EF281"
+        },
+        "0x13881":  {
+          "ERC721": "0xC20Aa5e1e51d36e21fC91D953eed2e46681412C3",
+          "ERC1155": "0x83cFd8AEAcAd6602E1DE32Ce388FcD03932EF281"
+        },
         "0x5": {
           "ERC721": "0xf33B9Be07bECc75a8A6c2c2307c0ce057dBeC899",
           "ERC1155": "0x5D0075e22b6dCaA6299b99A27Ae45A10AAB4D1c3"
         },
-        "0xa86a": null, 
-        "0x38": null,
-        "0x89": null, 
-        "0x1": null
+        "0xa86a":  {
+          "ERC721": "0x275E6A2aD3598189a2897F5b6af2F54E7cb623eF",
+          "ERC1155": "0x68b62a0B06028776c87A31A23D718EC982FD2084"
+        },
+        "0x38":  {
+          "ERC721": "0x68b62a0B06028776c87A31A23D718EC982FD2084",
+          "ERC1155": "0xA5691FD7f70e85F56ce663c7233deE22Cd57FAE7"
+        },
+        "0x89":  {
+          "ERC721": "0x68b62a0B06028776c87A31A23D718EC982FD2084",
+          "ERC1155": "0x275E6A2aD3598189a2897F5b6af2F54E7cb623eF"
+        },
+        "0x1":  {
+          "ERC721": "0x9832fe86Cb7B4b2e1b70bcc8E73f9A0958D5561d",
+          "ERC1155": "0x7d48841F025BC9b8F3D233CE9544C43eDd666df5"
+        }
     },
     "properties": [
       {
