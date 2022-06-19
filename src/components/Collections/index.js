@@ -59,7 +59,7 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
     // );
 
     const collectionItem = (collection, onClick) => (
-        <Grid item>
+        <Grid item key={collection.metadata.name}>
             <Button disableElevation
                     fullWidth
                     sx={{

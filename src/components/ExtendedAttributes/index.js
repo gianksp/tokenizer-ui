@@ -58,8 +58,8 @@ const ExtendedAttributes = ({t}) => {
     return (
         <Grid container sx={{ width: '100%', mt: 0 }} spacing={2}>
             <Grid item xs={12} sx={{ mt: 0 }}>
-                <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('1. Re-sale Royalties')}</Typography>
-                <Typography variant="body" fontSize="1em" fontWeight="300">
+                <Typography component={"span"} variant="h1" fontSize="1.3em" fontWeight="bold">{t('1. Re-sale Royalties')}</Typography>
+                <Typography component={"span"} variant="body" fontSize="1em" fontWeight="300">
                     {t('You, as a content creator, will receive a royalty based on the percentage everytime this NFT is being sold in a marketplace supporting')} <a height={10} size="small" href="https://eips.ethereum.org/EIPS/eip-2981" target="_blank" rel="noreferrer">EIP2981</a>
                 </Typography>
             </Grid>
@@ -86,8 +86,8 @@ const ExtendedAttributes = ({t}) => {
                 />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
-                <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t("2. Additional Fields")}</Typography>
-                <Typography variant="body" fontSize="1em" fontWeight="300">
+                <Typography component={"span"} variant="h1" fontSize="1.3em" fontWeight="bold">{t("2. Additional Fields")}</Typography>
+                <Typography component={"span"} variant="body" fontSize="1em" fontWeight="300">
                     {t('You can add custom fields to the metadata of this NFT in case you need to store custom properties e.g. promo_code: 1155 in order to support different')} <a href="https://docs.opensea.io/docs/metadata-standards" target="_blank" rel="noreferrer">metadata standards</a>
                 </Typography>
             </Grid>

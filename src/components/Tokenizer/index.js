@@ -143,7 +143,8 @@ const Tokenizer = ({ t,  onMint }) => {
     };
 
     useEffect(() => {
-        loadUserCollections();
+        if (isAuthenticated && user)
+            loadUserCollections();
         loadProperties();
     }, [configuration.appId, user]);
 

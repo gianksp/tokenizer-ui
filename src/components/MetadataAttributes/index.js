@@ -59,8 +59,8 @@ const MetadataAttributes = ({t}) => {
         <Grid container sx={{ width: '100%', mt: 2  }} spacing={2}>
             <Grid item xs={12}>
                 <Grid item xs={12} sx={{ mt: 2 }}>
-                    <Typography variant="h1" fontSize="1.3em" fontWeight="bold">{t('3. Custom Attributes')}</Typography>
-                    <Typography variant="body" fontSize="1em" fontWeight="300">
+                    <Typography component={"span"} variant="h1" fontSize="1.3em" fontWeight="bold">{t('3. Custom Attributes')}</Typography>
+                    <Typography component={"span"} variant="body" fontSize="1em" fontWeight="300">
                         {t('Add custom unique attributes to your NFT to enhance rarity e.g. monster_type: electric as per')} <a href="https://docs.opensea.io/docs/metadata-standards" target="_blank" rel="noreferrer">metadata standards</a>
                     </Typography>
                 </Grid>
