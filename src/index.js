@@ -4,11 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// provider
+import { MoralisProvider } from 'react-moralis';
+import { DappifyProvider } from 'react-dappify';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+
   <React.StrictMode>
-    <App />
+    <MoralisProvider 
+      appId={process.env.REACT_APP_MORALIS_APP_ID} 
+      serverUrl={process.env.REACT_APP_MORALIS_SERVER_URL}
+    >
+      <DappifyProvider>
+        <App />
+      </DappifyProvider>
+    </MoralisProvider>
   </React.StrictMode>
+
 );
 
 // If you want to start measuring performance in your app, pass a function

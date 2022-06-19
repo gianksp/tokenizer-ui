@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import { FormControl, Select, MenuItem, Button, Grid, Paper, Input, InputLabel, FormHelperText, Typography } from '@mui/material';
 import { MinterContext } from 'components';
-import constants from 'react-dappify/constants';
+import {constants, utils} from 'react-dappify';
+const { setPreference } = utils.localStorage;
 
-const Chains = ({t}) => {
-
+const Chains = ({t, defaultChainId }) => {
     const {minter, setMinter} = useContext(MinterContext);
 
     const renderChains = () => {
@@ -17,7 +17,7 @@ const Chains = ({t}) => {
                 <MenuItem value={network.chainId} key={network.chainId}>
                     <Grid container direction="row" spacing={2}>
                         <Grid item>
-                            <img style={{ width: 'auto', height: 24 }} src={image} alt={network.chainName} />
+                            <img style={{ width: 'auto', height: 16 }} src={image} alt={network.chainName} />
                         </Grid>
                         <Grid item>
                             {network.chainName}
@@ -31,17 +31,18 @@ const Chains = ({t}) => {
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Select the Network</InputLabel>
+            <InputLabel id="demo-simple-select-label">Network</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={minter.chainId}
-                label="Select the Network"
+                label="Network"
                 fullWidth
                 onChange={(e) => {
                     const newMinter = {...minter};
                     newMinter.chainId = e.target.value;
                     setMinter(newMinter);
+                    setPreference(constants.PREFERENCES.CHAIN, { chainId: newMinter.chainId });
                 }}
             >
                 {renderChains()}
