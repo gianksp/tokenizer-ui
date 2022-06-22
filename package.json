@@ -114,7 +114,7 @@
   "scripts": {
     "start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem env-cmd -f .env react-app-rewired start",
     "start:cli": "react-scripts start",
-    "build:cli":"react-scripts build",
+    "build:cli": "react-scripts build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
   },
