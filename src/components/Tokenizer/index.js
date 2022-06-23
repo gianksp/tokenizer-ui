@@ -300,12 +300,10 @@ const Tokenizer = ({ t,  onMint }) => {
 
     const authContent = (
 
-        <Grid container sx={{
-            px: '20%'
-        }}>
+        <Grid container alignItems="center" justifyContent="center" px={{ xs:2, md: '18%' }}>
             <WalletsDialog isOpen={showWalletDialog} onClose={() => setShowWalletDialog(false)} t={t} />
-            <Grid container sx={{ width: '100%', p: 4 }} spacing={2}>
-                <Box sx={{ width: '100%' }}>
+            <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ margin: '0 auto' }}>
+                <Box>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <Tabs value={value} onChange={handleChange} aria-label="options">
                     <Tab label={t('My NFT')} {...a11yProps(0)} />
@@ -349,12 +347,12 @@ const Tokenizer = ({ t,  onMint }) => {
                             )}
                             {!isAuthenticated && (
                                 <Grid item xs={12}>
-                                    <Button variant="contained" size="large" fullWidth  onClick={handleAuth}>{t('Connect your wallet to get started!')}</Button>
+                                    <Button id="connect-wallet-tokenizer-btn" variant="contained" size="large" fullWidth  onClick={handleAuth}>{t('Connect your wallet to get started!')}</Button>
                                 </Grid>
                             )}
                             {isAuthenticated && (
                                 <Grid item xs={12}>
-                                    <Button disabled={loading} variant="contained" size="large" fullWidth onClick={handleSubmit}>
+                                    <Button  id="mint-tokenizer-btn"  disabled={loading} variant="contained" size="large" fullWidth onClick={handleSubmit}>
                                         { !loading ? 
                                             t('Create your NFT') :
                                             t('Please confirm the transaction from your wallet and wait...')

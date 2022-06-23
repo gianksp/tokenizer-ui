@@ -8,7 +8,7 @@ const Properties = ({ t, defaultChainId }) => {
 
     return (
         
-        <Grid container sx={{ width: '100%' }} spacing={2}>
+        <Grid container sx={{ width: '100%' }} spacing={2} alignItems="center" justifyContent="center">
             <Grid item xs={12}>
                 <TextField  label={t('Title')}
                             value={minter.metadata.name} 
@@ -24,6 +24,7 @@ const Properties = ({ t, defaultChainId }) => {
                 <TextField  multiline 
                             value={minter.metadata.description} 
                             rows={3} 
+                            sx={{ width: '100%' }}
                             label={t('Description')} 
                             fullWidth
                             onChange={(e) => {
@@ -33,10 +34,11 @@ const Properties = ({ t, defaultChainId }) => {
                             }}
                 />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} lg={4}>
                 <TextField  label={t('# of copies')}
                             type="number" 
                             fullWidth 
+                            sx={{ width: '100%' }}
                             value={minter.amount}
                             onChange={(e) => {
                                 const newMinter = {...minter};
@@ -46,7 +48,7 @@ const Properties = ({ t, defaultChainId }) => {
                             }}
                 />
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12} lg={8}>
                 <Chains defaultChainId={defaultChainId} />
             </Grid>
         </Grid>
