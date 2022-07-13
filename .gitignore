@@ -1,5 +1,7 @@
 node_modules
 build
+.env
 .env.*
 firebase*
 *pem
+package-lock.json
