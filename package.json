@@ -55,6 +55,7 @@
     "material-ui-popup-state": "^1.8.0",
     "moment": "^2.29.1",
     "moralis": "^1.7.0",
+    "moralis-v1": "^1.12.0",
     "mui-color": "^2.0.0-beta.2",
     "os": "^0.1.2",
     "os-browserify": "^0.3.0",
