@@ -37,6 +37,8 @@ jobs:
           REACT_APP_INFURA_KEY: ${{ secrets.INFURA_API_KEY }}
           REACT_APP_HOST_ENV: production
           REACT_APP_TEMPLATE_NAME: tokenizer
+          REACT_APP_DAPPIFY_API_KEY: ${{ secrets.DAPPIFY_API_KEY }}
+          REACT_APP_DAPPIFY_API_URL: "https://api.dappify.com"
           CI: false
           NODE_OPTIONS: "--max-old-space-size=8192"
         run: yarn build:cli

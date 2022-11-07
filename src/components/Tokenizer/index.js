@@ -15,6 +15,7 @@ import Collections from 'components/Collections';
 import NFTList from 'components/NFTList';
 import Logo from 'components/Logo';
 import Editor from 'components/Editor';
+import isEmpty from 'lodash/isEmpty';
 
 
 const { formatAddress } = utils.format;
@@ -80,7 +81,8 @@ const minterProps = {
         symbol: '',
         shortUrl: '',
         image: ''
-    }
+    },
+    network: {}
 };
 
 const Tokenizer = ({ t,  onMint }) => {
@@ -101,15 +103,6 @@ const Tokenizer = ({ t,  onMint }) => {
         () => ({ minter, setMinter }), 
         [minter]
       );
-
-    useEffect(() => {
-        if (defaultChainId) {
-            const newMinter = {...minter};
-            newMinter.chainId = defaultChainId;
-            setMinter(newMinter);
-            setPreference(constants.PREFERENCES.CHAIN, { chainId: newMinter.chainId });
-        }
-    }, [defaultChainId]);
 
     const loadProperties = async () => {
         const props = await Property.findAllWithType({ type: 'option' });
@@ -375,7 +368,7 @@ const Tokenizer = ({ t,  onMint }) => {
                             <Dropzone initialFiles={getInitialDropzoneFiles()} handleChange={handleTokenImageChange} t={t} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Properties defaultChainId={defaultChainId} handleAuth={handleAuth} t={t} />
+                            <Properties defaultChainId={defaultChainId} handleAuth={handleAuth} t={t} props={options} configuration={configuration}/>
                         </Grid>
                         {/*<Grid item xs={12}>
                             <FormGroup>
@@ -427,6 +420,11 @@ const Tokenizer = ({ t,  onMint }) => {
                                     {minter.lazy && (<Alert severity="success">{t('Your token has been minted')}</Alert>)}
                                 </Grid>
                             )}
+                            {isEmpty(minter.collection) && !isEmpty(minter.network) &&
+                                (<Grid item xs={12}>
+                                    <Alert sx={{ wordBreak: 'break-word' }} severity="warning">{t('No available contracts for selected network, please deploy your own contracts')}</Alert>
+                                </Grid>)
+                            }
                             {!isAuthenticated && (
                                 <Grid item xs={12}>
                                     <Button id="connect-wallet-tokenizer-btn" variant="contained" size="large" fullWidth  onClick={handleAuth}>{t('Connect your wallet to get started!')}</Button>
