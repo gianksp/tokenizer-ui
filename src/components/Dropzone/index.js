@@ -50,8 +50,8 @@ const Dropzone = ({ initialFiles=[], handleChange, t=()=>{} }) => {
     const {getRootProps, getInputProps} = useDropzone({
         accept: {
         'image/*': ['.png', '.jpeg'],
-        'video/*': ['.mp3'],
-        'audio/*': ['.mp4']
+        'video/*': ['.mp4'],
+        'audio/*': ['.mp3']
         },
         onDrop: acceptedFiles => {
             // set state in dropzone, for visibility
