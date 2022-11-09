@@ -24,7 +24,7 @@ const CollectionDialog = ({ open=false, onClose, t }) => {
         error: null
     });
 
-    const targetNetwork = NETWORKS[minter.chainId].chainName;
+    const targetNetwork = NETWORKS[minter.chainId]?.chainName;
 
 
     const handleTokenImageChange = async (files) => {

@@ -3,7 +3,7 @@ import { Grid, TextField } from '@mui/material';
 import Chains from 'components/Chains';
 import { MinterContext } from 'components';
 
-const Properties = ({ t, defaultChainId }) => {
+const Properties = ({ t, defaultChainId, props, configuration }) => {
     const {minter, setMinter} = useContext(MinterContext);
 
     return (
@@ -49,7 +49,7 @@ const Properties = ({ t, defaultChainId }) => {
                 />
             </Grid>
             <Grid item xs={12} lg={8}>
-                <Chains defaultChainId={defaultChainId} />
+                <Chains defaultChainId={defaultChainId} props={props} configuration={configuration} />
             </Grid>
         </Grid>
 

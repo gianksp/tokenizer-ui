@@ -44,6 +44,14 @@
     "0x2a": {
       "ERC721": "0x68b62a0B06028776c87A31A23D718EC982FD2084",
       "ERC1155": "0xA5691FD7f70e85F56ce663c7233deE22Cd57FAE7"
+    },
+    "0x253": {
+      "ERC721": "0xA05a64Af69AfA088fcd3D0D2f18147B4F21dDb09",
+      "ERC1155": "0x275E6A2aD3598189a2897F5b6af2F54E7cb623eF"
+    },
+    "0x313": {
+      "ERC721": null,
+      "ERC1155": null
     }
   },
   "properties": [

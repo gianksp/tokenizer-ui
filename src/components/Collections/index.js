@@ -32,6 +32,7 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
     useEffect(() => {
         if (!isEmpty(config)) {
             console.log(config.contract);
+            console.log(minter.chainId);
             const defaultCollection = config?.contract[minter.chainId];
             if (!isEmpty(defaultCollection)){
                 setDefaultCollection();
