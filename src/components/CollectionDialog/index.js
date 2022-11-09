@@ -84,6 +84,8 @@ const CollectionDialog = ({ open=false, onClose, t }) => {
 
             const newMinter = {...minter};
             newMinter.collection = deployment.address.toLocaleLowerCase();
+            console.log(`Setting minter`);
+            console.log(newMinter.collection);
             setMinter(newMinter);
 
             await new Transaction({
