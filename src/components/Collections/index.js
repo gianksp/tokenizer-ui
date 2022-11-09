@@ -17,11 +17,16 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
         const cfg = await fetch(`dappify.json`)
         .then((r) => r.json())
         setConfig(cfg);
+        console.log('loaded config');
+        console.log(cfg);
     };
 
     const setDefaultCollection = async () => {
         const newMinter = {...minter};
+        console.log(`Setting default collection for ${minter.chainId}`);
         newMinter.collection = config?.contract[minter.chainId];
+        console.log(`Setting minter`);
+		console.log(newMinter.collection);
         setMinter(newMinter);
     };
 
@@ -137,6 +142,8 @@ const Collections = ({t, handleAuth, collections, onClose, hidden=false }) => {
                 const newMinter = {...minter};
                 newMinter.collection = {};
                 newMinter.collection[newMinter.type] = collection.contract;
+                console.log(`Setting minter`);
+                console.log(newMinter.collection);
                 setMinter(newMinter);
             }))
         })

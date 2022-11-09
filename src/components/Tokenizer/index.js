@@ -104,6 +104,7 @@ const Tokenizer = ({ t,  onMint }) => {
         [minter]
       );
 
+      
     const loadProperties = async () => {
         const props = await Property.findAllWithType({ type: 'option' });
         setOptions(props);
@@ -346,7 +347,7 @@ const Tokenizer = ({ t,  onMint }) => {
             setJsonWarning(upload)
             }
         }
-
+        console.log(minter);
 
     const authContent = (
 

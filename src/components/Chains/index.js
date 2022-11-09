@@ -43,6 +43,8 @@ const Chains = ({t, props, configuration }) => {
         newMinter.chainId = stringId.startsWith('0x') ? stringId : `0x${value.chainId.toString(16)}`;
         newMinter.network = value;
         newMinter.collection = defaultContracts[defaultChainId];
+		console.log(`Setting minter`);
+		console.log(newMinter.collection);
         setMinter(newMinter);
         setPreference(constants.PREFERENCES.CHAIN, { chainId: newMinter.chainId });
     }
@@ -54,8 +56,11 @@ const Chains = ({t, props, configuration }) => {
             newMinter.chainId = stringId.startsWith('0x') ? stringId : `0x${defaultChainId.toString(16)}`;
             const targetNetwork = networks.find((network) => network.chainId.toString() === stringId);
             newMinter.network = targetNetwork;
-            newMinter.collection = defaultContracts[defaultChainId];
-            console.log(newMinter);
+            newMinter.collection = defaultContracts[newMinter.chainId];
+			console.log(`Setting minter`);
+			console.log(newMinter.collection);
+			console.log(defaultContracts);
+			console.log(defaultChainId);
             setMinter(newMinter);
             setPreference(constants.PREFERENCES.CHAIN, { chainId: newMinter.chainId });
         }
