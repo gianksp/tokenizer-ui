@@ -52,6 +52,10 @@
     "0x313": {
       "ERC721": null,
       "ERC1155": null
+    },
+    "0x504": {
+      "ERC721": "0xA05a64Af69AfA088fcd3D0D2f18147B4F21dDb09",
+      "ERC1155": "0x275E6A2aD3598189a2897F5b6af2F54E7cb623eF"
     }
   },
   "properties": [
