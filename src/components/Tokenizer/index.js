@@ -222,6 +222,7 @@ const Tokenizer = ({ t,  onMint }) => {
                     await imageFile.saveIPFS();
                     const imageFileUrl = imageFile.ipfs();
                     minter.metadata.image = imageFileUrl;
+                    Logger.debug(`Image uri ${imageFileUrl}`)
                 }
                 // Append audio file
                 if (properAudio) {
@@ -230,6 +231,7 @@ const Tokenizer = ({ t,  onMint }) => {
                     await videoFile.saveIPFS();
                     const videoFileUrl = videoFile.ipfs();
                     minter.metadata.youtube_url = videoFileUrl;
+                    Logger.debug(`Videofile uri ${videoFileUrl}`)
                 }
                 // Append video file
                 if (properVideo) {
@@ -238,6 +240,7 @@ const Tokenizer = ({ t,  onMint }) => {
                     await audioFile.saveIPFS();
                     const audioFileUrl = audioFile.ipfs();
                     minter.metadata.animation_url = audioFileUrl;
+                    Logger.debug(`Audio uri ${audioFileUrl}`)
                 }
 
                 // Generate metadata and save to IPFS
