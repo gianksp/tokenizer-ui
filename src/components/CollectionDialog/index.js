@@ -27,7 +27,7 @@ const CollectionDialog = ({ open=false, onClose, t }) => {
 
     // const targetNetwork = NETWORKS[minter.chainId]?.chainName;
 
-    const [targetNetwork, setNetwork] = useState({})
+    const [targetNetwork, setNetwork] = useState()
 
     const loadNetwork = async () => {
     if (!minter?.chainId) {
@@ -42,7 +42,7 @@ const CollectionDialog = ({ open=false, onClose, t }) => {
         }
         }
     )
-    setNetwork(response.data)
+    setNetwork(response?.data?.name)
     }
 
     useEffect(() => {
