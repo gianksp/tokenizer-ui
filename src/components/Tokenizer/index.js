@@ -16,7 +16,7 @@ import NFTList from 'components/NFTList';
 import Logo from 'components/Logo';
 import Editor from 'components/Editor';
 import isEmpty from 'lodash/isEmpty';
-
+import axios from 'axios';
 
 const { formatAddress } = utils.format;
 
@@ -104,7 +104,28 @@ const Tokenizer = ({ t,  onMint }) => {
         [minter]
       );
 
-      
+    const [network, setNetwork] = useState({})
+
+    const loadNetwork = async () => {
+    if (!configuration?.chainId) {
+        return
+    }
+    const response = await axios.get(
+        `${process.env.REACT_APP_DAPPIFY_API_URL}/chain/${configuration?.chainId}`,
+        {
+        headers: {
+            'x-api-Key': process.env.REACT_APP_DAPPIFY_API_KEY,
+            accept: 'application/json'
+        }
+        }
+    )
+    setNetwork(response.data)
+    }
+
+    useEffect(() => {
+        loadNetwork()
+    }, [])
+
     const loadProperties = async () => {
         const props = await Property.findAllWithType({ type: 'option' });
         setOptions(props);
@@ -275,7 +296,10 @@ const Tokenizer = ({ t,  onMint }) => {
                     tokenId = tx.events[0].topics[3];
                     hash = tx.transactionHash;
                     status = 'Minted';
-                    response = `${constants.NETWORKS[minter.chainId].blockExplorerUrls[0]}/tx/${hash}`;
+
+                    const explorers = network?.explorers;
+                    const targetExplorer = explorers && explorers.length > 0 ? explorers[0].url : '';
+                    response = `${targetExplorer}/tx/${hash}`;
                 } else {
                     // Lazy mint
                     status = 'LazyMinted';

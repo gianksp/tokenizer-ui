@@ -1,9 +1,10 @@
-import React, { forwardRef, useState, useContext } from "react";
+import React, { forwardRef, useState, useContext, useEffect } from "react";
 import { Grid, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, Slide, Alert } from '@mui/material';
 import { DappifyContext, constants, utils, contracts as artifacts, Transaction } from 'react-dappify';
 import Dropzone from 'components/Dropzone';
 import { MinterContext } from 'components';
 import { ethers } from 'ethers';
+import axios from 'axios';
 
 const { contracts: Bytecode } = artifacts;
 
@@ -16,7 +17,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const CollectionDialog = ({ open=false, onClose, t }) => {
-    const { Provider, switchToChain } = useContext(DappifyContext);
+    const { Provider, switchToChain, configuration } = useContext(DappifyContext);
     const {minter, setMinter} = useContext(MinterContext);
     const [creatingCollection, setCreatingCollection] = useState({
         data: null,
@@ -24,7 +25,29 @@ const CollectionDialog = ({ open=false, onClose, t }) => {
         error: null
     });
 
-    const targetNetwork = NETWORKS[minter.chainId]?.chainName;
+    // const targetNetwork = NETWORKS[minter.chainId]?.chainName;
+
+    const [targetNetwork, setNetwork] = useState()
+
+    const loadNetwork = async () => {
+    if (!minter?.chainId) {
+        return
+    }
+    const response = await axios.get(
+        `${process.env.REACT_APP_DAPPIFY_API_URL}/chain/${minter?.chainId}`,
+        {
+        headers: {
+            'x-api-Key': process.env.REACT_APP_DAPPIFY_API_KEY,
+            accept: 'application/json'
+        }
+        }
+    )
+    setNetwork(response?.data?.name)
+    }
+
+    useEffect(() => {
+        loadNetwork()
+    }, [])
 
 
     const handleTokenImageChange = async (files) => {
@@ -80,7 +103,9 @@ const CollectionDialog = ({ open=false, onClose, t }) => {
             console.log(deployment);
 
             console.log(`New contract at ${deployment.address}`);
-            const response = `${constants.NETWORKS[minter.chainId].blockExplorerUrls[0]}/address/${deployment.address}`;
+            const explorers = targetNetwork?.explorers;
+            const targetExplorer = explorers && explorers.length > 0 ? explorers[0].url : '';
+            const response = `${targetExplorer}/address/${deployment.address}`;
 
             const newMinter = {...minter};
             newMinter.collection = deployment.address.toLocaleLowerCase();
