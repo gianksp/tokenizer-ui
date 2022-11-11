@@ -296,8 +296,8 @@ const Tokenizer = ({ t,  onMint }) => {
                     tokenId = tx.events[0].topics[3];
                     hash = tx.transactionHash;
                     status = 'Minted';
-
-                    const explorers = network?.explorers;
+                    console.log(minter?.network);
+                    const explorers = minter?.network?.explorers;
                     const targetExplorer = explorers && explorers.length > 0 ? explorers[0].url : '';
                     response = `${targetExplorer}/tx/${hash}`;
                 } else {
